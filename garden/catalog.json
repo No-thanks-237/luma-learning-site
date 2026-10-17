@@ -1,0 +1,65 @@
+{
+  "version": "2026-10-17.1",
+  "assets": [
+    {
+      "id": "pink-garden",
+      "title": "粉色绒花园",
+      "description": "指尖经过，立体花瓣轻轻摆动。",
+      "kind": "flowers",
+      "price": 0,
+      "palette": [
+        "#f3dce9",
+        "#e89ab7",
+        "#c6b0e3",
+        "#f7dba5",
+        "#9eb7a5"
+      ],
+      "seed": 17
+    },
+    {
+      "id": "little-ocean",
+      "title": "小鱼的慢海",
+      "description": "小鱼、气泡和浅蓝色的海，一起慢下来。",
+      "kind": "ocean",
+      "price": 12,
+      "palette": [
+        "#d5eef0",
+        "#83bfc7",
+        "#f0b4bf",
+        "#f8d897",
+        "#d5c5ec"
+      ],
+      "seed": 42
+    },
+    {
+      "id": "cloud-forest",
+      "title": "云朵小森林",
+      "description": "圆润的树冠和萤光，陪伴一轮安静的回忆。",
+      "kind": "forest",
+      "price": 18,
+      "palette": [
+        "#e2eee1",
+        "#a5c9af",
+        "#c5b8d9",
+        "#f2d7bf",
+        "#87a69b"
+      ],
+      "seed": 81
+    },
+    {
+      "id": "birds-in-pink",
+      "title": "飞鸟与晚霞",
+      "description": "让飞鸟把今天的单词带向远方。",
+      "kind": "birds",
+      "price": 24,
+      "palette": [
+        "#e9e0f4",
+        "#b4a4d4",
+        "#f1c6d2",
+        "#f5dca6",
+        "#cfdfeb"
+      ],
+      "seed": 133
+    }
+  ]
+}

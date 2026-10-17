@@ -1,0 +1,4 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>摄像头识别组件本地验证</title><h1>识别组件验证（不调用摄像头）</h1><p id="status">正在载入本地模型…</p><canvas id="frame" width="640" height="480"></canvas><script type="module">
+import {FilesetResolver,FaceLandmarker} from '/luma-learning-site/vision/vision_bundle.mjs';
+try { const fs=await FilesetResolver.forVisionTasks('/luma-learning-site/vision/wasm');const d=await FaceLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:'/luma-learning-site/vision/face_landmarker.task',delegate:'CPU'},runningMode:'IMAGE',numFaces:1}); const c=document.querySelector('canvas'); const x=c.getContext('2d');x.fillStyle='#ddd';x.fillRect(0,0,640,480);const result=d.detect(c);document.querySelector('#status').textContent='验证通过：本地 WASM 和模型已载入；空画面检出 '+result.faceLandmarks.length+' 张人脸。没有调用摄像头。';d.close(); } catch(e) {document.querySelector('#status').textContent='验证失败：'+e.message;}
+</script></html>

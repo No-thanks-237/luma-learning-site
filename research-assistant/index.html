@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#193f36">
+  <meta name="description" content="研伴科研入门工作台：解析论文、翻译段落、带出处提问，形成自己的读书卡。">
+  <title>研伴 · 本机论文研读与学习空间</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=20261017-14">
+  <script src="demo-data.js" defer></script>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <script src="vendor/katex/katex.min.js" defer></script>
+  <script src="vendor/supabase/supabase.js" defer></script>
+  <script src="cloud-config.js" defer></script>
+  <script src="format.js?v=20261017-14" defer></script>
+  <link rel="stylesheet" href="format.css?v=20261017-14">
+  <link rel="stylesheet" href="vendor/pdfjs/pdf_viewer.css">
+  <link rel="stylesheet" href="workspace.css?v=20261017-14">
+  <script type="module" src="public.js?v=20261017-14"></script>
+  <link rel="stylesheet" href="learning-detail.css?v=20261017-14">
+  <link rel="stylesheet" href="luma-integration.css?v=58d1d877">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="工作空间导航">
+      <a class="brand" href="#" aria-label="研伴首页"><span class="brand-symbol"><svg viewBox="0 0 32 32" fill="none"><path d="M7 8h7c4 0 7 3 7 7v10h-7c-4 0-7-3-7-7V8Z" stroke="currentColor" stroke-width="1.8"/><path d="M14 8V5h11v13c0 4-3 7-7 7" stroke="currentColor" stroke-width="1.8"/><path d="M11 14h6M11 18h6" stroke="currentColor" stroke-width="1.5"/></svg></span><span class="brand-word">研伴<span>RESEARCH COMPANION</span></span></a>
+      <div class="workspace-label"><span>我的研究空间</span><span class="tiny-pill">个人</span></div>
+      <nav class="main-nav">
+        <button class="nav-item active" data-action="workspace"><span data-icon="layout"></span><span>研读工作台</span><span class="nav-dot"></span></button>
+        <button class="nav-item" data-action="library"><span data-icon="library"></span><span>我的论文</span><span class="nav-count" id="paper-count">1</span></button>
+        <button class="nav-item" data-action="notes"><span data-icon="notebook"></span><span>读书卡</span><span class="nav-count" id="note-count">0</span></button>
+      </nav>
+      <div class="sidebar-divider"></div>
+      <div class="section-label"><span>正在研读</span><button class="icon-button small" data-action="library" title="打开论文库" aria-label="打开论文库"><span data-icon="plus"></span></button></div>
+      <button class="paper-nav-card" data-action="demo"><span class="paper-mini-icon" data-icon="file"></span><span><strong>理解检索增强生成</strong><small>原创教学示例 · 4 个章节</small></span></button>
+      <div class="outline-heading">论文目录</div>
+      <nav id="outline" class="outline" aria-label="论文目录"></nav>
+      <div class="sidebar-bottom">
+        <div class="reading-progress"><div><span>本次阅读</span><strong id="progress-count">1 / 4 节</strong></div><div class="progress-track"><span id="progress-fill"></span></div><small>按已浏览章节记录</small></div>
+        <button class="help-link" data-action="settings"><span data-icon="settings"></span><span>模型设置 · 自带 Key</span></button>
+        <button class="help-link" data-action="about"><span data-icon="info"></span><span>关于研伴</span></button>
+        <div class="profile"><span class="avatar">研</span><div><strong>我的学习空间</strong><span>记录保存在当前浏览器</span></div></div>
+      </div>
+    </aside>
+
+    <main class="main-shell">
+      <header class="topbar">
+        <div class="breadcrumb"><span>我的论文</span><span class="breadcrumb-slash">/</span><strong id="top-doc-title">理解检索增强生成</strong></div>
+        <div class="topbar-actions"><button class="prototype-badge" id="connection-badge" data-action="settings" title="查看模型连接设置"><span></span>检查连接</button><button class="button secondary compact" data-action="notes"><span data-icon="notebook"></span><span>读书卡</span></button><button class="button primary compact" data-action="library"><span data-icon="plus"></span><span>导入论文</span></button></div>
+      </header>
+
+      <div class="workspace">
+        <section class="reader-panel" aria-label="论文阅读区域">
+          <div class="reader-toolbar"><div class="segmented-control" aria-label="阅读语言"><button class="selected" data-view="original" aria-pressed="true">原文</button><button data-view="bilingual" aria-pressed="false">双语对照</button><button data-view="pdf" aria-pressed="false" hidden>PDF 原貌</button></div><div class="reader-tools"><span class="page-counter" id="page-counter">01 / 04</span><span class="tool-divider"></span><button class="icon-button" data-action="zoom-out" aria-label="缩小论文页面" title="缩小页面"><span data-icon="minus"></span></button><button class="zoom-label" id="zoom-label" data-action="zoom-fit" title="点击恢复适合页面宽度">100%</button><button class="icon-button" data-action="zoom-in" aria-label="放大论文页面" title="放大页面"><span data-icon="plus"></span></button><span class="tool-divider"></span><button class="icon-button" data-action="focus" aria-label="切换专注阅读" title="专注阅读"><span data-icon="expand"></span></button></div></div>
+          <div class="reader-scroll" id="reader-scroll"><div class="paper-context"><span class="context-dot"></span><span id="reader-context">教学示例 / 点击段落，即可翻译或提问</span></div><article class="paper-page" id="paper-page"></article><div class="page-navigation"><button class="text-button" data-action="prev"><span data-icon="left"></span>上一节</button><span id="section-footer">摘要与研究问题</span><button class="text-button" data-action="next">下一节<span data-icon="right"></span></button></div><p class="paper-disclaimer">本文为原创教学示例，不对应真实发表论文。</p></div>
+          <div class="selection-bar" id="selection-bar" hidden><span id="selection-label">已选择原文</span><button data-action="translate-selection"><span data-icon="translate"></span>翻译</button><button data-action="explain-selection"><span data-icon="spark"></span>解释</button><button data-action="save-selection"><span data-icon="bookmark"></span>摘录</button><button class="selection-close" data-action="clear-selection" aria-label="取消选择">×</button></div>
+        </section>
+
+        <aside class="assistant-panel" aria-label="研读助手">
+          <div class="assistant-heading"><div class="assistant-symbol"><span data-icon="spark"></span></div><div><h2>研读助手</h2><p>把每一个疑问，变成理解。</p></div><button class="icon-button" data-action="about" aria-label="查看助手模式"><span data-icon="info"></span></button></div>
+          <div class="assistant-tabs" role="tablist" aria-label="助手功能"><button class="active" role="tab" aria-selected="true" data-tab="chat">对话</button><button role="tab" aria-selected="false" data-tab="translate">翻译</button><button role="tab" aria-selected="false" data-tab="concepts">基础概念</button><button role="tab" aria-selected="false" data-tab="notebook">笔记</button></div>
+          <div class="assistant-body" id="assistant-body"><div id="chat-view" class="tab-view"><div class="demo-notice"><span data-icon="flask"></span><span>示例模式 · 回复为预置教学内容</span></div><div id="messages" class="messages" aria-live="polite" aria-relevant="additions"></div><div id="prompt-suggestions" class="prompt-suggestions"><div class="suggestion-label">可以从这里开始</div><button data-prompt="这篇论文的核心思路是什么？"><span data-icon="spark"></span>先帮我梳理核心思路<span data-icon="up-right"></span></button><button data-prompt="检索和生成有什么区别？"><span data-icon="layers"></span>检索和生成有什么区别？<span data-icon="up-right"></span></button><button data-prompt="有引用就代表答案正确吗？"><span data-icon="link"></span>有引用就代表答案正确吗？<span data-icon="up-right"></span></button></div><button class="understanding-entry" data-action="quiz"><span data-icon="check-circle"></span><span>理解了？用一个小问题检验一下</span><span data-icon="right"></span></button></div><div id="translate-view" class="tab-view" hidden></div><div id="concepts-view" class="tab-view" hidden></div><div id="notebook-view" class="tab-view" hidden><div class="notebook-heading"><span class="eyebrow">THINK IN YOUR OWN WORDS</span><h3 id="notebook-title">研究笔记</h3><p>记录灵感、推导和下一步，不受读书卡栏目限制。</p></div><div class="notebook-toolbar"><button id="notebook-insert" class="text-button">引用选文</button><button id="notebook-preview-toggle" class="text-button">预览排版</button><button id="notebook-export" class="text-button">导出</button></div><textarea id="notebook-editor" aria-label="当前论文研究笔记" maxlength="100000" placeholder="这里写下你的理解…&#10;&#10;支持 Markdown 和 LaTeX 公式，例如 $f_0 = \frac{1}{2\pi\sqrt{LC}}$"></textarea><div id="notebook-preview" class="model-answer" hidden></div><p id="notebook-save-state" role="status">自动保存</p></div></div>
+          <div class="composer-area"><div class="composer"><textarea id="question-input" rows="2" placeholder="关于这篇论文，你想知道什么？" aria-label="向研读助手提问"></textarea><div class="composer-bottom"><span><span class="small-dot"></span><span id="context-label">基于当前教学示例</span></span><button class="send-button" id="send-button" aria-label="发送问题"><span data-icon="arrow-up"></span></button></div></div><div class="composer-hint"><span>Enter 发送 · Shift + Enter 换行</span><span>示例回复可回到原文核对</span></div></div>
+        </aside>
+      </div>
+      <nav class="mobile-switch" aria-label="切换阅读与助手"><button class="active" data-mobile="reader"><span data-icon="book"></span>论文</button><button data-mobile="assistant"><span data-icon="spark"></span>助手</button></nav>
+    </main>
+  </div>
+
+  <dialog id="library-dialog" class="modal library-modal" aria-labelledby="library-title"><div class="modal-heading"><div><span class="eyebrow">YOUR READING SPACE</span><h2 id="library-title">我的论文</h2><p>从一篇论文开始，建立自己的理解。</p></div><button class="icon-button" data-close="library-dialog" aria-label="关闭论文库"><span data-icon="close"></span></button></div><div class="parser-options" id="parser-options" hidden><label>解析方式<select id="parser-engine"><option value="pdfjs">PDF.js · 浏览器基础文本提取</option></select></label><label class="checkbox-label"><input id="parser-ocr" type="checkbox" disabled>公开版暂不支持扫描件 OCR</label><small>PDF 在本机解析与保存。PDF 原貌视图保留公式与图表。</small></div><label class="upload-dropzone" id="upload-dropzone"><span class="upload-circle" data-icon="upload"></span><strong>拖入 PDF，或点击选择文件</strong><span id="upload-caption">本地预览 · 最大 20 MB</span><input type="file" accept="application/pdf,.pdf" class="file-input" aria-label="选择 PDF 文件"></label><p class="upload-note" id="upload-note">正在初始化阅读组件。</p><div class="job-status" id="job-status" role="status" hidden></div><div id="server-paper-list"></div><div class="library-section-label">体验示例</div><button class="library-paper" data-action="demo"><span class="library-cover"><span>RAG</span><small>READING PRIMER</small></span><span class="library-paper-info"><span class="tag">原创教学示例</span><strong>理解检索增强生成</strong><span>从研究问题、方法到证据与局限</span></span><span data-icon="right"></span></button><div id="local-paper-entry"></div></dialog>
+
+  <dialog id="notes-dialog" class="modal notes-modal" aria-labelledby="notes-title"><div class="modal-heading"><div><span class="eyebrow">MAKE IT YOUR OWN</span><h2 id="notes-title">我的读书卡</h2><p>把读到的内容，整理成自己的理解。</p></div><button class="icon-button" data-close="notes-dialog" aria-label="关闭读书卡"><span data-icon="close"></span></button></div><div class="notes-source"><span data-icon="file"></span><span>理解检索增强生成 · 教学示例</span><span class="save-status" id="save-status">本地保存</span></div><div class="notes-fields" id="notes-fields"></div><div class="excerpts-heading"><h3>原文摘录</h3><span id="excerpt-count">0 条</span></div><div id="excerpts-list"></div><div class="modal-footer"><button class="button secondary" data-action="fill-notes"><span data-icon="spark"></span>填入示例读书卡</button><button class="button primary" data-action="export-notes"><span data-icon="download"></span>导出 Markdown</button></div></dialog>
+
+  <dialog id="quiz-dialog" class="modal quiz-modal" aria-labelledby="quiz-title"><div class="modal-heading"><div><span class="eyebrow">A MOMENT TO REFLECT</span><h2 id="quiz-title">检查一下自己的理解</h2><p>随时可以跳过，不影响继续阅读。</p></div><button class="icon-button" data-close="quiz-dialog" aria-label="关闭理解检查"><span data-icon="close"></span></button></div><div id="quiz-content"></div></dialog>
+
+  <dialog id="about-dialog" class="modal about-modal" aria-labelledby="about-title"><div class="modal-heading"><div><span class="eyebrow">RESEARCH COMPANION 02</span><h2 id="about-title">让阅读，真正走向理解。</h2></div><button class="icon-button" data-close="about-dialog" aria-label="关闭说明"><span data-icon="close"></span></button></div><p>研伴是面向科研新手的论文研读工作台。先找原文依据，再解释、翻译，最后留下自己的理解。</p><div class="about-features"><div><span data-icon="check-circle"></span><p><strong>真实论文研读</strong>在浏览器中解析 PDF，填写自己的 Key 后可按段翻译、带出处提问和生成读书卡。教学示例始终使用预置内容，便于零配置体验。</p></div><div><span data-icon="flask"></span><p><strong>回答需要核对</strong>解析可能遗漏公式、图表或文字；模型可能出错。有引用代表可以定位来源，不代表结论已经验证。真实论文使用按页目录，结构化文本不等于原始版式。</p></div><div><span data-icon="lock"></span><p><strong>你的资料</strong>未登录时资料保存在本机；登录后自动同步到账号私有云空间。模型 Key 不参与同步。发起翻译或问答时，相关论文片段会发送到你配置的模型服务；不自动发送整篇 PDF。笔记先保存在本机，登录后可同步；API Key 默认只在当前页面生效；可自行勾选记住，以明文保存在当前浏览器。</p></div></div><button class="button primary full-width" data-close="about-dialog">继续研读</button></dialog>
+  <dialog id="settings-dialog" class="modal settings-modal" aria-labelledby="settings-title"><div class="modal-heading"><div><span class="eyebrow">CONNECT YOUR MODEL</span><h2 id="settings-title">模型与连接</h2><p>每位使用者填写自己的 Key，费用由自己的 DeepSeek 账户承担。</p></div><button class="icon-button" data-close="settings-dialog" aria-label="关闭模型设置"><span data-icon="close"></span></button></div><div id="settings-connection" class="settings-status" role="status">正在检查连接。</div><form id="settings-form" autocomplete="off"><fieldset id="model-fields" disabled><label class="settings-field">模型服务<select id="model-provider"><option value="deepseek">DeepSeek</option></select></label><label class="settings-field">API 地址<input id="model-url" type="url" readonly value="https://api.deepseek.com" required spellcheck="false" autocomplete="off"></label><label class="settings-field">选择模型<select id="model-choice" aria-describedby="model-choice-help"><option value="deepseek-flash">DeepSeek V4.1 Flash（推荐）</option><option value="deepseek-v4-pro">DeepSeek V4 Pro</option><option value="deepseek-v4-flash">V4 Flash 旧编号（实际调用 V4.1 Flash）</option><option value="deepseek-v4-flash-vision-exp">V4 Flash Vision 旧编号（实际调用 V4.1 Flash）</option><option value="__custom__">其他型号（手动填写）</option></select></label><label class="settings-field" id="custom-model-field" hidden>模型编号<input id="model-name" type="text" value="deepseek-flash" disabled spellcheck="false" autocomplete="off" placeholder="填写服务商提供的模型编号"></label><p class="settings-help" id="model-choice-help">选择后点击“保存配置”，后续提问和翻译会使用所选型号。</p><label class="settings-field">API Key<input id="model-key" type="password" placeholder="粘贴新密钥；已有密钥时可留空" autocomplete="new-password" spellcheck="false"></label><label class="checkbox-label"><input id="model-remember" type="checkbox" aria-describedby="remember-key-help">在此浏览器记住 API Key</label><p class="settings-help" id="remember-key-help">默认不记住；勾选并保存后，Key 将以明文保存在当前浏览器，下次自动恢复，仅建议在自己的设备使用。取消勾选并保存可删除本地副本，本次页面仍可使用。Key 直接发送给 DeepSeek 官方，不经过本站服务器。论文、笔记与学习进度保存在当前浏览器，此集成版未启用账号云同步；问答、翻译、全文读书卡会将相关文字发送给 DeepSeek，并使用你的账户额度。请勿在不信任的共用设备上导入私人论文。</p><div class="settings-actions"><button class="button secondary" type="submit" id="save-model">保存配置</button><button class="button primary" type="button" data-action="test-model" id="test-model">保存并测试连接</button></div></fieldset></form><p class="settings-help" id="key-storage-status"></p><div id="settings-result" class="settings-result" role="status" hidden></div><div class="settings-links"><a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener noreferrer">申请 DeepSeek API Key ↗</a><button class="text-button" data-action="refresh-connection">重新检查连接</button><button class="text-button" type="button" id="forget-public-key">清除 Key（含本机保存）</button></div></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>

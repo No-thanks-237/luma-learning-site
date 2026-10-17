@@ -1,0 +1,5 @@
+/* Local-only integration; upstream cloud code is retained but unconfigured. */
+.account-entry,#cloud-sync-indicator{display:none!important}
+.app-shell>.sidebar{width:100%;min-width:0;max-width:none;padding:26px 18px 0;border:0;border-right:1px solid var(--line);border-radius:0;box-shadow:none;background:linear-gradient(180deg,#f8faf7,#eff4f0)}
+@media(max-width:1250px){.app-shell>.sidebar{padding-left:12px;padding-right:12px}}
+@media(max-width:1050px){.app-shell>.sidebar{padding:24px 10px 0}}
