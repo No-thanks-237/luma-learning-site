@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { startShelfDrag, moveShelfDrag } from '../assets/shelf-drag.js';
+import { startShelfDrag, moveShelfDrag, shelfWheelDelta } from '../assets/shelf-drag.js';
 
 const pointer = (x, y, extra = {}) => ({
   button: 0, pointerId: 1, pointerType: 'mouse', isPrimary: true,
@@ -9,6 +9,13 @@ const pointer = (x, y, extra = {}) => ({
 const options = {
   angle: 0, scroll: 150, mode: 'ring', bounds: { top: 100, height: 580 },
 };
+
+test('wheel pixels, lines and pages use comparable distances', () => {
+  assert.equal(shelfWheelDelta({ deltaX: 0, deltaY: 48, deltaMode: 0 }, 580), 48);
+  assert.equal(shelfWheelDelta({ deltaX: 0, deltaY: 3, deltaMode: 1 }, 580), 48);
+  assert.equal(shelfWheelDelta({ deltaX: 0, deltaY: -1, deltaMode: 2 }, 580), -580);
+  assert.equal(shelfWheelDelta({ deltaX: -3, deltaY: 1, deltaMode: 1 }, 580), -48);
+});
 
 test('rightward drags move books right at both the top and bottom of the ring', () => {
   for (const [y, theta] of [[180, 0], [600, Math.PI]]) {

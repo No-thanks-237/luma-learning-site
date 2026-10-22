@@ -2,6 +2,13 @@
 const DRAG_THRESHOLD = 7;
 const DEGREES_PER_PIXEL = 0.32;
 
+export function shelfWheelDelta(event, pageHeight) {
+  // Wheel deltas may be pixels, text lines or entire pages (Firefox/devices).
+  const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? pageHeight : 1;
+  const delta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+  return delta * unit;
+}
+
 export function startShelfDrag(event, { angle, scroll, mode, bounds }) {
   if (event.button !== 0 || event.isPrimary === false) return null;
   // The rail already supports native touch scrolling and momentum.
